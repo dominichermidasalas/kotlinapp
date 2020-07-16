@@ -2,4 +2,8 @@
     <string name="app_name">kotlin</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_mobile_number">Enter your mobile number</string>
+    <string name="validate_phone">Validate Phone</string>
+    <string name="continue_text">Continue</string>
+    <string name="phone_hint_text">+1 (123) 456-7890</string>
 </resources>
