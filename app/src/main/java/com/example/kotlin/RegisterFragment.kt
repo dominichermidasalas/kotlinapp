@@ -8,6 +8,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.kotlin.databinding.FragmentRegisterBinding
+import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : Fragment() {
     override fun onCreateView(
@@ -18,8 +19,9 @@ class RegisterFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentRegisterBinding>(
             inflater, R.layout.fragment_register, container, false)
 
+
         binding.continuePhoneButton.setOnClickListener(
-            Navigation.createNavigateOnClickListener(R.id.action_registerFragment_to_confirmFragment)
+            Navigation.createNavigateOnClickListener(RegisterFragmentDirections.actionRegisterFragmentToConfirmFragment("asdfasdfafa"))
         )
 
         setHasOptionsMenu(true)

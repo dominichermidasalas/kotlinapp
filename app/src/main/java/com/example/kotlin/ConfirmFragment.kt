@@ -1,59 +1,88 @@
 package com.example.kotlin
 
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.ColorSpace
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.example.kotlin.confirm.ConfirmViewModel
+import com.example.kotlin.databinding.ActivityMainBinding
+import com.example.kotlin.databinding.FragmentConfirmBinding
+import com.example.kotlin.databinding.FragmentRegisterBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ConfirmFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+const val KEY_NUMBER = "phoneNumber"
 class ConfirmFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var viewModel: ConfirmViewModel
 
+    @SuppressLint("WrongConstant")
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_confirm, container, false)
+
+        val binding = DataBindingUtil.inflate<FragmentConfirmBinding>(inflater, R.layout.fragment_confirm, container, false)
+
+        Log.i("onCreateView", "Called from viewmodelproviders")
+
+        viewModel = ViewModelProviders.of(this).get(ConfirmViewModel::class.java)
+
+
+        var args = ConfirmFragmentArgs.fromBundle(requireArguments())
+
+        // TODO recuperar el token que escribio el usuario
+        var user_token = "asfdasfas"
+
+
+
+
+        binding.confirmCodeButton.setOnClickListener {
+            viewModel.validate(args.phoneNumber, user_token)
+        }
+
+        viewModel.validate.observe(this, Observer {isValid ->
+            Log.i("dominic", "este es el color $isValid")
+            if (!isValid.toString().toBoolean()) {
+                binding.validResult.text = "Invalid Token"
+                binding.validResult.visibility = View.VISIBLE
+                binding.validResult.setTextColor(Color.RED)
+                //Not Valid Token
+            }else{
+                binding.validResult.text = "Valid Token"
+                binding.validResult.visibility = View.VISIBLE
+                binding.validResult.setTextColor(Color.GREEN)
+
+                binding.codeEditText.focusable = View.NOT_FOCUSABLE
+                //Valid Token
+            }
+        })
+
+
+        // TODO poner el verdadero numero de celular
+        if (savedInstanceState != null){
+            var phone_number = savedInstanceState.getString(KEY_NUMBER)
+            Toast.makeText(context, "this is what i restored ${phone_number}", Toast.LENGTH_LONG).show()
+
+        }
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ConfirmFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ConfirmFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // TODO poner el verdadero numero de celular
+        outState.putString(KEY_NUMBER,"phonenumber123123")
+        Log.i("dominic", "on save instance state")
     }
 }

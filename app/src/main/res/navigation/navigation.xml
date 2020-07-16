@@ -18,7 +18,11 @@
         android:id="@+id/confirmFragment"
         android:name="com.example.kotlin.ConfirmFragment"
         android:label="fragment_confirm"
-        tools:layout="@layout/fragment_confirm" />
+        tools:layout="@layout/fragment_confirm" >
+        <argument
+            android:name="phoneNumber"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/adminFragment"
         android:name="com.example.kotlin.AdminFragment"
