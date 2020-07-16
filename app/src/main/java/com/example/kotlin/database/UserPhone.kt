@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "phone_validation_tries_table")
-data class ValidPhone(
+@Entity(tableName = "phone_validation_table")
+data class UserPhone(
     @PrimaryKey(autoGenerate = true)
     var userId: Long = 0L,
 
