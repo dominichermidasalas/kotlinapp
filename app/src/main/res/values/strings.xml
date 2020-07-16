@@ -6,4 +6,5 @@
     <string name="validate_phone">Validate Phone</string>
     <string name="continue_text">Continue</string>
     <string name="phone_hint_text">+1 (123) 456-7890</string>
+    <string name="registered_users">Registered users</string>
 </resources>
