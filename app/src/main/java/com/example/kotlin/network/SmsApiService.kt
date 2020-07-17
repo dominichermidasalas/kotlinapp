@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 
-private const val BASE_URL = "http://dummy.restapiexample.com/api/v1/employees"
+private const val BASE_URL = "https://jsonplaceholder.typicode.com/"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
@@ -13,7 +13,7 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface SmsApiService{
-    @GET("api/v1/employees")
+    @GET("todos/1")
     fun getProperties():
             Call<String>
 }
