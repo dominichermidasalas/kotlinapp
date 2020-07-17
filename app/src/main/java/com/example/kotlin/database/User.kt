@@ -13,5 +13,8 @@ data class User(
     var phoneNumber : String = "",
 
     @ColumnInfo(name = "token")
-    var token : String = ""
+    var token : String = "",
+
+    @ColumnInfo(name = "validated")
+    var validated : Boolean = false
 )
