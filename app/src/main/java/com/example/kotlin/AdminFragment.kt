@@ -1,13 +1,24 @@
 package com.example.kotlin
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kotlin.admin.AdminViewModel
+import com.example.kotlin.admin.AdminViewModelFactory
 import com.example.kotlin.database.User
+import com.example.kotlin.database.UserDatabase
+import com.example.kotlin.databinding.FragmentAdminBinding
+import com.example.kotlin.databinding.FragmentConfirmBinding
+import com.example.kotlin.register.RegisterViewModel
+import com.example.kotlin.register.RegisterViewModelFactory
 import kotlinx.android.synthetic.main.fragment_admin.*
 import kotlinx.android.synthetic.main.fragment_admin.view.*
 
@@ -22,13 +33,21 @@ class AdminFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var userList = ArrayList<User>()
-        userList.add(User(1, "768768687", "767673", true))
+        val binding = DataBindingUtil.inflate<FragmentAdminBinding>(inflater, R.layout.fragment_admin, container, false)
 
-        // Inflate the layout for this fragment
-        var adminMenu = inflater.inflate(R.layout.fragment_admin, container, false)
-        adminMenu.recycler_view.adapter = RowAdapter(userList)
-        adminMenu.recycler_view.layoutManager = LinearLayoutManager(this.context)
-        return adminMenu
+        val application = requireNotNull(this.activity).application
+        val dataSource = UserDatabase.getInstance(application).userDao
+        val viewModelFactory = AdminViewModelFactory(dataSource, application)
+        val adminViewModel = ViewModelProviders.of(this, viewModelFactory).get(AdminViewModel::class.java)
+
+
+        binding.lifecycleOwner = this
+
+
+        adminViewModel.livedata.observe(this, Observer { userList ->
+                Log.i("ALL_USERS", userList.toString())
+        })
+
+        return binding.root
     }
 }
