@@ -18,15 +18,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.kotlin.confirm.ConfirmViewModel
 import com.example.kotlin.confirm.ConfirmViewModelFactory
+import com.example.kotlin.database.UserDatabase
 import com.example.kotlin.databinding.ActivityMainBinding
 import com.example.kotlin.databinding.FragmentConfirmBinding
 import com.example.kotlin.databinding.FragmentRegisterBinding
+import com.example.kotlin.register.RegisterViewModel
+import com.example.kotlin.register.RegisterViewModelFactory
 
 const val KEY_NUMBER = "phoneNumber"
 class ConfirmFragment : Fragment() {
-
-    private lateinit var viewModel: ConfirmViewModel
-    private lateinit var viewModelFactory: ConfirmViewModelFactory
 
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -39,17 +39,17 @@ class ConfirmFragment : Fragment() {
 
         Log.i("onCreateView", "Called from viewmodelproviders")
 
-        viewModelFactory = ConfirmViewModelFactory(ConfirmFragmentArgs.fromBundle(requireArguments()).phoneNumber.toString())
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ConfirmViewModel::class.java)
-
-        binding.confirmViewModel = viewModel
-
-        // TODO recuperar el token que escribio el usuario
-        var user_token = "asfdasfas"
 
 
+        // new stuff
+        var phoneNumber = ConfirmFragmentArgs.fromBundle(requireArguments()).phoneNumber.toString()
+        val application = requireNotNull(this.activity).application
+        val dataSource = UserDatabase.getInstance(application).userDao
+        val viewModelFactory = ConfirmViewModelFactory(phoneNumber,dataSource, application)
+        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(ConfirmViewModel::class.java)
 
         binding.confirmCodeButton.setOnClickListener {
+            Log.i("ViewModel", "esto es lo que ingresó el usuario ${binding.codeEditText.text.toString()}")
             viewModel.validate(binding.codeEditText.text.toString())
         }
 

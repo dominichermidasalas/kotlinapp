@@ -17,12 +17,19 @@ import retrofit2.Response
 class RegisterViewModel(val database: UserDao, application: Application) : AndroidViewModel(application) {
 
     private var viewModelJob = Job()
+    public var allReadyvalidated = MutableLiveData<Boolean>()
+    public var observar  = true
 
     fun register(phoneNumber : String){
-        var token = (100..1000).random().toString()
+        Log.i("raro", "otra vez aquí")
+        userAlreadyValidate(phoneNumber)
+    }
+
+    fun create(phoneNumber : String){
+        var token = (100000..999999).random().toString()
         var user = initializeUser(phoneNumber,token)
         Log.i("async","a punto de enviar sms")
-        sendSMS(phoneNumber)
+        sendSMS(phoneNumber,token)
         return user
     }
 
@@ -35,6 +42,12 @@ class RegisterViewModel(val database: UserDao, application: Application) : Andro
         Log.i("async","initializeUser $phoneNumber token $token")
         uiScope.launch {
             user.value = getUserFromDatabase(phoneNumber, token)
+        }
+    }
+
+    private fun userAlreadyValidate(phoneNumber: String){
+        uiScope.launch {
+            allReadyvalidated.value = getUserFromDatabase(phoneNumber)
         }
     }
 
@@ -54,17 +67,29 @@ class RegisterViewModel(val database: UserDao, application: Application) : Andro
         }
     }
 
+    private suspend fun getUserFromDatabase(phoneNumber: String): Boolean{
+        return withContext(Dispatchers.IO){
+            var user = database.get(phoneNumber)
+            Log.i("ultimo","esto es lo que regresó databse $user")
+            if(user == null){
+               false
+            }else{
+                user.validated
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
 
-    private fun sendSMS(phoneNumber: String){
+    private fun sendSMS(phoneNumber: String, token: String){
         Log.i("async","dentro de enviar sms")
-        var basic = Credentials.basic("AC3c2f400abbb0c6024f357deee75a3ce5", "d885a933425de52dcec71fddacd0cc64")
-        SmsApi.retrofitService.postNumber(basic, phoneNumber, "+12183068958", "https://demo.twilio.com/owl.png", "Hola").enqueue(object : Callback<String> {
+        var basic = Credentials.basic("xxx", "xx1")
+        SmsApi.retrofitService.postNumber(basic, phoneNumber, "+12183068958", "https://demo.twilio.com/owl.png", token).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.i("async", "Error")
+                Log.i("async", t.toString())
             }
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 Log.i("async POST", "response: " + response.body())
