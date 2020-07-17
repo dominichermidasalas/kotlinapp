@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.kotlin.confirm.ConfirmViewModel
+import com.example.kotlin.confirm.ConfirmViewModelFactory
 import com.example.kotlin.databinding.ActivityMainBinding
 import com.example.kotlin.databinding.FragmentConfirmBinding
 import com.example.kotlin.databinding.FragmentRegisterBinding
@@ -25,6 +26,7 @@ const val KEY_NUMBER = "phoneNumber"
 class ConfirmFragment : Fragment() {
 
     private lateinit var viewModel: ConfirmViewModel
+    private lateinit var viewModelFactory: ConfirmViewModelFactory
 
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -37,19 +39,18 @@ class ConfirmFragment : Fragment() {
 
         Log.i("onCreateView", "Called from viewmodelproviders")
 
-        viewModel = ViewModelProviders.of(this).get(ConfirmViewModel::class.java)
+        viewModelFactory = ConfirmViewModelFactory(ConfirmFragmentArgs.fromBundle(requireArguments()).phoneNumber.toString())
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ConfirmViewModel::class.java)
 
-
-        var args = ConfirmFragmentArgs.fromBundle(requireArguments())
+        binding.confirmViewModel = viewModel
 
         // TODO recuperar el token que escribio el usuario
         var user_token = "asfdasfas"
 
 
 
-
         binding.confirmCodeButton.setOnClickListener {
-            viewModel.validate(args.phoneNumber, user_token)
+            viewModel.validate(binding.codeEditText.text.toString())
         }
 
         viewModel.validate.observe(this, Observer {isValid ->
@@ -85,4 +86,6 @@ class ConfirmFragment : Fragment() {
         outState.putString(KEY_NUMBER,"phonenumber123123")
         Log.i("dominic", "on save instance state")
     }
+
+
 }
