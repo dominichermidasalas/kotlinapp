@@ -42,11 +42,21 @@ class AdminFragment : Fragment() {
 
 
         binding.lifecycleOwner = this
-
+        var listOfUsers:  List<User> = emptyList()
+        //listOfUsers.add(User(1, "1234565777", "234355", true))
+        //listOfUsers.add(User(2, "1234567553", "236855", false))
 
         adminViewModel.livedata.observe(this, Observer { userList ->
-                Log.i("ALL_USERS", userList.toString())
-        })
+
+                if(userList != null){
+                    listOfUsers = userList
+                    Log.i("karol", listOfUsers.toString())
+                    binding.recyclerView.adapter = RowAdapter(listOfUsers)
+                    binding.recyclerView.layoutManager = LinearLayoutManager(context)
+                }
+
+            })
+
 
         return binding.root
     }
