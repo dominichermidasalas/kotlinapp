@@ -86,7 +86,7 @@ class RegisterViewModel(val database: UserDao, application: Application) : Andro
 
     private fun sendSMS(phoneNumber: String, token: String){
         Log.i("async","dentro de enviar sms")
-        var basic = Credentials.basic("AC3c2f400abbb0c6024f357deee75a3ce5", "e1c7daec2de8c7e426211107033371e3")
+        var basic = Credentials.basic("XXX", "XXX")
         SmsApi.retrofitService.postNumber(basic, phoneNumber, "+12183068958", "https://demo.twilio.com/owl.png", token).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 Log.i("async", t.toString())

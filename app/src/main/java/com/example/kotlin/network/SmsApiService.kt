@@ -9,7 +9,7 @@ import retrofit2.http.*
 private const val TEST_URL = "https://postman-echo.com/"
 private const val TEST_ENDPOINT = "post"
 private const val PROD_URL = "https://api.twilio.com/"
-private const val PROD_ENDPOINT = "2010-04-01/Accounts/xxx/Messages.json"
+private const val PROD_ENDPOINT = "2010-04-01/Accounts/XXX/Messages.json"
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
     .baseUrl(PROD_URL)

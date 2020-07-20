@@ -50,7 +50,6 @@ class AdminFragment : Fragment() {
 
                 if(userList != null){
                     listOfUsers = userList
-                    Log.i("karol", listOfUsers.toString())
                     binding.recyclerView.adapter = RowAdapter(listOfUsers)
                     binding.recyclerView.layoutManager = LinearLayoutManager(context)
                 }
